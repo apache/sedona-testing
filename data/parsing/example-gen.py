@@ -16,7 +16,7 @@
 # under the License.
 
 # This generates the example-wkt.tsv and example-wkb-*.tsv files. This is
-# done in using geoarrow.pyarrow because it includes a WKB writer that
+# done using geoarrow.pyarrow because it includes a WKB writer that
 # faithfully translates ZM EMPTY geometries from WKT to WKB. Shapely is
 # used to write big-endian WKB (where ZM EMPTY geometries are special-cased).
 
