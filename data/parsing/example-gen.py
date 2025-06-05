@@ -54,16 +54,35 @@ if __name__ == "__main__":
                 f.write(f"{row}\t{group_name}\t{geometry_wkb.hex().upper()}\n")
                 row += 1
 
+    # GEOS/Shapely can't roundtrip empty geometries that aren't just XY
+    BE_OVERRIDES = {
+        "MULTIPOINT Z EMPTY": "00000003EC00000000",
+        "MULTILINESTRING Z EMPTY": "00000003ED00000000",
+        "MULTIPOLYGON Z EMPTY": "00000003EE00000000",
+        "GEOMETRYCOLLECTION Z EMPTY": "00000003EF00000000",
+        "MULTIPOINT M EMPTY": "00000007D400000000",
+        "MULTILINESTRING M EMPTY": "00000007D500000000",
+        "MULTIPOLYGON M EMPTY": "00000007D600000000",
+        "GEOMETRYCOLLECTION M EMPTY": "00000007D700000000",
+        "MULTIPOINT ZM EMPTY": "0000000BBC00000000",
+        "MULTILINESTRING ZM EMPTY": "0000000BBD00000000",
+        "MULTIPOLYGON ZM EMPTY": "0000000BBE00000000",
+        "GEOMETRYCOLLECTION ZM EMPTY": "0000000BBF00000000",
+        None: "",
+    }
+
     with open(HERE / "example-wkb-be.tsv", "w") as f:
         f.write("id\tgroup\tgeometry\n")
         row = 0
         for group_name, geometries_wkt in examples.items():
             for geometry in geometries_wkt:
-                if geometry is not None:
+                if geometry not in BE_OVERRIDES:
                     geom = shapely.from_wkt(geometry)
-                    geometry_wkb = shapely.to_wkb(geom, flavor="iso", byte_order=0)
+                    geometry_wkb = (
+                        shapely.to_wkb(geom, flavor="iso", byte_order=0).hex().upper()
+                    )
                 else:
-                    geometry_wkb = b""
+                    geometry_wkb = BE_OVERRIDES[geometry]
 
-                f.write(f"{row}\t{group_name}\t{geometry_wkb.hex().upper()}\n")
+                f.write(f"{row}\t{group_name}\t{geometry_wkb}\n")
                 row += 1
