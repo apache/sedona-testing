@@ -15,9 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# This generates the example-wkt.tsv and example-wkb-*.tsv files. This is
+# done in using geoarrow.pyarrow because it includes a WKB writer that
+# faithfully translates ZM EMPTY geometries from WKT to WKB. Shapely is
+# used to write big-endian WKB (where ZM EMPTY geometries are special-cased).
+
 from pathlib import Path
 
 import geoarrow.pyarrow as ga
+import shapely
 import yaml
 
 HERE = Path(__file__).parent
@@ -42,6 +48,20 @@ if __name__ == "__main__":
             for geometry in geometries_wkt:
                 if geometry is not None:
                     geometry_wkb = bytes(ga.as_wkb([geometry]).storage[0].as_py())
+                else:
+                    geometry_wkb = b""
+
+                f.write(f"{row}\t{group_name}\t{geometry_wkb.hex().upper()}\n")
+                row += 1
+
+    with open(HERE / "example-wkb-be.tsv", "w") as f:
+        f.write("id\tgroup\tgeometry\n")
+        row = 0
+        for group_name, geometries_wkt in examples.items():
+            for geometry in geometries_wkt:
+                if geometry is not None:
+                    geom = shapely.from_wkt(geometry)
+                    geometry_wkb = shapely.to_wkb(geom, flavor="iso", byte_order=0)
                 else:
                     geometry_wkb = b""
 

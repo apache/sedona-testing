@@ -15,11 +15,15 @@
 # specific language governing permissions and limitations
 # under the License.
 
+# This generates the example-ewkb-*.tsv files. This is done in R because
+# the wk package for R includes an EWKB writer that faithfully translates
+# ZM EMPTY geometries from WKT to WKB with both endians.
+
 library(tidyverse)
 library(wk)
 library(yaml)
 
-examples <- yaml.load_file("data/wkt/example.yaml")
+examples <- yaml.load_file("data/parsing/example.yaml")
 
 wkb_example_hex_ewkb <- function(endian = 0x01) {
   tibble(
@@ -48,7 +52,7 @@ wkb_example_hex_ewkb <- function(endian = 0x01) {
 }
 
 wkb_example_hex_ewkb(endian = 0x01) |>
-  write_tsv("data/wkt/example-ewkb-le.tsv")
+  write_tsv("data/parsing/example-ewkb-le.tsv")
 
 wkb_example_hex_ewkb(endian = 0x00) |>
-  write_tsv("data/wkt/example-ewkb-be.tsv")
+  write_tsv("data/parsing/example-ewkb-be.tsv")
