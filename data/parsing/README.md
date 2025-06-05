@@ -28,4 +28,4 @@ big/little endian, and extended/ISO well-known binary.
 - `example-ewkb-le.tsv`: A tab-separated values file with columns `id`, `group`, and `geometry`, where geometry is formatted as little-endian ISO well-known binary (EWKB).
 - `example-ewkb-be.tsv`: A tab-separated values file with columns `id`, `group`, and `geometry`, where geometry is formatted as big-endian extended well-known binary (EWKB).
 
-This directory also contains the files used to generate the .tsv formatted versions (`example-gen.py` and `example-gen.R`).
+This directory also contains the files used to generate the `.tsv` formatted versions (`example-gen.py` and `example-gen.R`).
