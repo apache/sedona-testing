@@ -20,6 +20,6 @@
 # Parquet Example Files
 
 - `geoparquet-1.0.0.parquet`: A small subset of global country border polygons/multipolygons with GeoParquet 1.0.0 metadata
-- `geoparquet-1.1.0.parquet`: A small subset of global country border with GeoParquet 1.1.0 metadata (including a bbox covering)
-- `overature-bbox.parquet`: [Overature Maps Foundation](https://overturemaps.org/) data with GeoParquet 1.1.0 metadata (including a bbox covering)
+- `geoparquet-1.1.0.parquet`: A small subset of global country border polygons/multipolygons with GeoParquet 1.1.0 metadata (including a bbox covering)
+- `overture-bbox.parquet`: [Overture Maps Foundation](https://overturemaps.org/) data with GeoParquet 1.1.0 metadata (including a bbox covering)
 - `plain.parquet`: A Parquet file without GeoParquet metadata
