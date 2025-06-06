@@ -18,6 +18,6 @@
 # https://github.com/actions/labeler
 documentation:
   - any:
-    - changed-files:
-      - any-glob-to-any-file:
-        - '**/*.md'
+      - changed-files:
+          - any-glob-to-any-file:
+              - '**/*.md'
