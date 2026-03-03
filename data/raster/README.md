@@ -42,3 +42,10 @@ These files originate from the [Apache Sedona repository](https://github.com/apa
 - `test4.tiff`: A 10x10 single-band GeoTIFF (Byte)
 - `test5.tiff`: A 1440x720 single-band GeoTIFF (Byte, palette color)
 - `test.nc`: A NetCDF file (512x512)
+
+## Test Files from georust/gdal
+
+These files originate from the [georust/gdal repository](https://github.com/georust/gdal/tree/master/fixtures), MIT licensed.
+
+- `tinymarble.tif`: A 100x50 GeoTIFF (Byte, RGB), no CRS
+- `labels.tif`: A 186x169 single-band GeoTIFF (Byte), WGS 84 / UTM zone 17N, NoData=255, 3 classes
