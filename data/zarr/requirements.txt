@@ -1,0 +1,4 @@
+# Exact versions used to generate the committed fixtures.
+numpy==2.3.5
+pyproj==3.7.2
+zarr==3.1.5
