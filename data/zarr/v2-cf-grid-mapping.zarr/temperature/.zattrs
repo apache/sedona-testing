@@ -1,0 +1,10 @@
+{
+  "_ARRAY_DIMENSIONS": [
+    "time",
+    "y",
+    "x"
+  ],
+  "grid_mapping": "spatial_ref",
+  "coordinates": "time y x spatial_ref",
+  "units": "K"
+}

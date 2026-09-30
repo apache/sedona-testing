@@ -1,0 +1,4 @@
+{
+  "title": "Zarr v2 fixture with CF grid-mapping metadata",
+  "Conventions": "CF-1.8"
+}

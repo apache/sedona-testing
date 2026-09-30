@@ -1,0 +1,135 @@
+{
+  "v2-cf-grid-mapping.zarr": {
+    "chunk_grid_shape": [
+      2,
+      2,
+      2
+    ],
+    "consolidated_metadata": ".zmetadata",
+    "crs_authority": "EPSG:3857",
+    "geotransform": [
+      100.0,
+      1.0,
+      0.0,
+      200.0,
+      0.0,
+      -1.0
+    ],
+    "metadata": "CF grid mapping in a scalar spatial_ref array",
+    "raster_arrays": [
+      "temperature"
+    ],
+    "zarr_format": 2
+  },
+  "v3-cf-grid-mapping.zarr": {
+    "chunk_grid_shape": [
+      2,
+      2,
+      2
+    ],
+    "consolidated_metadata": null,
+    "crs_authority": "EPSG:3857",
+    "geotransform": [
+      100.0,
+      1.0,
+      0.0,
+      200.0,
+      0.0,
+      -1.0
+    ],
+    "metadata": "CF grid mapping in a scalar spatial_ref array",
+    "raster_arrays": [
+      "precipitation"
+    ],
+    "zarr_format": 3
+  },
+  "v3-geozarr-bbox-node.zarr": {
+    "chunk_grid_shape": [
+      2,
+      2,
+      2
+    ],
+    "consolidated_metadata": null,
+    "crs_authority": "EPSG:32610",
+    "geotransform": [
+      500000.0,
+      30.0,
+      0.0,
+      5200000.0,
+      0.0,
+      -30.0
+    ],
+    "metadata": "GeoZarr PROJJSON and node-registered spatial bbox",
+    "raster_arrays": [
+      "elevation"
+    ],
+    "zarr_format": 3
+  },
+  "v3-geozarr-bbox-pixel.zarr": {
+    "chunk_grid_shape": [
+      2,
+      2,
+      2
+    ],
+    "consolidated_metadata": null,
+    "crs_authority": "EPSG:4326",
+    "geotransform": [
+      -124.0,
+      0.5,
+      0.0,
+      50.0,
+      0.0,
+      -0.5
+    ],
+    "metadata": "GeoZarr WKT2 and pixel-registered spatial bbox",
+    "raster_arrays": [
+      "air_temperature"
+    ],
+    "zarr_format": 3
+  },
+  "v3-geozarr-consolidated.zarr": {
+    "chunk_grid_shape": [
+      2,
+      2,
+      2
+    ],
+    "consolidated_metadata": "inline root zarr.json",
+    "crs_authority": "EPSG:32610",
+    "geotransform": [
+      500000.0,
+      30.0,
+      0.0,
+      5200000.0,
+      0.0,
+      -30.0
+    ],
+    "metadata": "GeoZarr-style group attributes",
+    "raster_arrays": [
+      "quality",
+      "reflectance"
+    ],
+    "zarr_format": 3
+  },
+  "v3-lon-lat-coordinates.zarr": {
+    "chunk_grid_shape": [
+      2,
+      2,
+      2
+    ],
+    "consolidated_metadata": null,
+    "crs_authority": "EPSG:4326",
+    "geotransform": [
+      -124.0,
+      0.5,
+      0.0,
+      50.0,
+      0.0,
+      -0.5
+    ],
+    "metadata": "regular latitude and longitude coordinate arrays",
+    "raster_arrays": [
+      "air_temperature"
+    ],
+    "zarr_format": 3
+  }
+}

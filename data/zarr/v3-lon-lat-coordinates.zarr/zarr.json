@@ -1,0 +1,7 @@
+{
+  "attributes": {
+    "title": "Zarr v3 fixture with regular lon/lat coordinates"
+  },
+  "zarr_format": 3,
+  "node_type": "group"
+}

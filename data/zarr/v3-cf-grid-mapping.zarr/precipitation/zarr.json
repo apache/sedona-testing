@@ -1,0 +1,47 @@
+{
+  "shape": [
+    2,
+    4,
+    6
+  ],
+  "data_type": "int16",
+  "chunk_grid": {
+    "name": "regular",
+    "configuration": {
+      "chunk_shape": [
+        1,
+        2,
+        3
+      ]
+    }
+  },
+  "chunk_key_encoding": {
+    "name": "default",
+    "configuration": {
+      "separator": "/"
+    }
+  },
+  "fill_value": 0,
+  "codecs": [
+    {
+      "name": "bytes",
+      "configuration": {
+        "endian": "little"
+      }
+    }
+  ],
+  "attributes": {
+    "grid_mapping": "spatial_ref: x y",
+    "coordinates": "time y x",
+    "standard_name": "lwe_precipitation_rate",
+    "units": "kg m-2 s-1"
+  },
+  "dimension_names": [
+    "time",
+    "y",
+    "x"
+  ],
+  "zarr_format": 3,
+  "node_type": "array",
+  "storage_transformers": []
+}

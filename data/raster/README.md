@@ -22,6 +22,9 @@
 This directory contains raster files used for testing Sedona's raster functionality.
 Files are sourced from public datasets and the [Apache Sedona test resources](https://github.com/apache/sedona/tree/master/spark/common/src/test/resources/raster).
 
+Synthetic Zarr hierarchy fixtures are documented separately in
+[`../zarr/README.md`](../zarr/README.md).
+
 ## Public Dataset Tiles
 
 These are small cropped tiles from well-known public raster datasets. All permit free redistribution.
