@@ -33,6 +33,8 @@ from pyproj import CRS
 HERE = Path(__file__).parent
 FIXTURE_NAMES = (
     "v2-cf-grid-mapping.zarr",
+    "v3-geozarr-bbox-node.zarr",
+    "v3-geozarr-bbox-pixel.zarr",
     "v3-geozarr-consolidated.zarr",
     "v3-lon-lat-coordinates.zarr",
 )
@@ -44,6 +46,34 @@ ZARR_JSON_NAMES = {
     ".zmetadata",
     "zarr.json",
 }
+
+# Stable v0.1 references from the GeoZarr proj and spatial conventions. Keeping
+# these here makes the fixture metadata self-describing and avoids duplicating
+# URLs and permanent convention identifiers in every creator below.
+# https://github.com/zarr-conventions/proj/blob/v0.1/README.md
+# https://github.com/zarr-conventions/spatial/blob/v0.1/README.md
+GEOZARR_CONVENTIONS = [
+    {
+        "schema_url": (
+            "https://raw.githubusercontent.com/zarr-conventions/proj/"
+            "refs/tags/v0.1/schema.json"
+        ),
+        "spec_url": "https://github.com/zarr-conventions/proj/blob/v0.1/README.md",
+        "uuid": "f17cb550-5864-4468-aeb7-f3180cfb622f",
+        "name": "proj",
+        "description": "Coordinate reference system information for geospatial data",
+    },
+    {
+        "schema_url": (
+            "https://raw.githubusercontent.com/zarr-conventions/spatial/"
+            "refs/tags/v0.1/schema.json"
+        ),
+        "spec_url": ("https://github.com/zarr-conventions/spatial/blob/v0.1/README.md"),
+        "uuid": "689b58e2-cf7b-45e0-9fff-9cfc0883d6b4",
+        "name": "spatial",
+        "description": "Spatial coordinate information",
+    },
+]
 
 
 def sample_cube(dtype: str) -> np.ndarray:
@@ -110,8 +140,10 @@ def create_v3_geozarr_consolidated(output: Path) -> None:
         overwrite=True,
         attributes={
             "title": "Zarr v3 fixture with inline consolidated metadata",
+            "zarr_conventions": GEOZARR_CONVENTIONS,
             "proj:code": "EPSG:32610",
             "spatial:dimensions": ["y", "x"],
+            "spatial:shape": [4, 6],
             "spatial:transform": [30.0, 0.0, 500000.0, 0.0, -30.0, 5200000.0],
         },
     )
@@ -140,6 +172,62 @@ def create_v3_geozarr_consolidated(output: Path) -> None:
         zarr.consolidate_metadata(path, zarr_format=3)
     for child_metadata in path.glob("*/zarr.json"):
         child_metadata.unlink()
+
+
+def create_v3_geozarr_bbox_pixel(output: Path) -> None:
+    """Create a GeoZarr v3 store using a bbox with pixel registration."""
+    path = output / "v3-geozarr-bbox-pixel.zarr"
+    root = zarr.create_group(
+        store=path,
+        zarr_format=3,
+        overwrite=True,
+        attributes={
+            "title": "GeoZarr v3 fixture with a pixel-registered bbox",
+            "zarr_conventions": GEOZARR_CONVENTIONS,
+            "proj:wkt2": CRS.from_epsg(4326).to_wkt(version="WKT2_2019"),
+            "spatial:dimensions": ["latitude", "longitude"],
+            "spatial:shape": [4, 6],
+            "spatial:bbox": [-124.0, 48.0, -121.0, 50.0],
+            "spatial:registration": "pixel",
+        },
+    )
+    root.create_array(
+        "air_temperature",
+        data=sample_cube("float32"),
+        chunks=(1, 2, 3),
+        dimension_names=("time", "latitude", "longitude"),
+        compressors=[],
+        attributes={"units": "K"},
+    )
+
+
+def create_v3_geozarr_bbox_node(output: Path) -> None:
+    """Create a GeoZarr v3 store using a bbox with node registration."""
+    path = output / "v3-geozarr-bbox-node.zarr"
+    root = zarr.create_group(
+        store=path,
+        zarr_format=3,
+        overwrite=True,
+        attributes={
+            "title": "GeoZarr v3 fixture with a node-registered bbox",
+            "zarr_conventions": GEOZARR_CONVENTIONS,
+            "proj:projjson": CRS.from_epsg(32610).to_json_dict(),
+            "spatial:dimensions": ["northing", "easting"],
+            "spatial:shape": [4, 6],
+            # Node-registration bounds describe the centers of the border
+            # cells rather than the outside edges of the raster footprint.
+            "spatial:bbox": [500015.0, 5199895.0, 500165.0, 5199985.0],
+            "spatial:registration": "node",
+        },
+    )
+    root.create_array(
+        "elevation",
+        data=sample_cube("float32"),
+        chunks=(1, 2, 3),
+        dimension_names=("time", "northing", "easting"),
+        compressors=[],
+        attributes={"units": "m"},
+    )
 
 
 def create_v3_lon_lat_coordinates(output: Path) -> None:
@@ -184,6 +272,8 @@ def generate(output: Path) -> None:
             shutil.rmtree(path)
     create_v2_cf_grid_mapping(output)
     create_v3_geozarr_consolidated(output)
+    create_v3_geozarr_bbox_pixel(output)
+    create_v3_geozarr_bbox_node(output)
     create_v3_lon_lat_coordinates(output)
     manifest = {
         "v2-cf-grid-mapping.zarr": {
@@ -203,6 +293,24 @@ def generate(output: Path) -> None:
             "geotransform": [500000.0, 30.0, 0.0, 5200000.0, 0.0, -30.0],
             "metadata": "GeoZarr-style group attributes",
             "consolidated_metadata": "inline root zarr.json",
+        },
+        "v3-geozarr-bbox-pixel.zarr": {
+            "zarr_format": 3,
+            "raster_arrays": ["air_temperature"],
+            "chunk_grid_shape": [2, 2, 2],
+            "crs_authority": "EPSG:4326",
+            "geotransform": [-124.0, 0.5, 0.0, 50.0, 0.0, -0.5],
+            "metadata": "GeoZarr WKT2 and pixel-registered spatial bbox",
+            "consolidated_metadata": None,
+        },
+        "v3-geozarr-bbox-node.zarr": {
+            "zarr_format": 3,
+            "raster_arrays": ["elevation"],
+            "chunk_grid_shape": [2, 2, 2],
+            "crs_authority": "EPSG:32610",
+            "geotransform": [500000.0, 30.0, 0.0, 5200000.0, 0.0, -30.0],
+            "metadata": "GeoZarr PROJJSON and node-registered spatial bbox",
+            "consolidated_metadata": None,
         },
         "v3-lon-lat-coordinates.zarr": {
             "zarr_format": 3,
