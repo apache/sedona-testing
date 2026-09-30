@@ -26,6 +26,7 @@ repository's Apache License 2.0.
 | Fixture | Format | Purpose |
 | --- | --- | --- |
 | `v2-cf-grid-mapping.zarr` | Zarr v2, consolidated | Xarray `_ARRAY_DIMENSIONS`; a CF/rioxarray `spatial_ref` scalar containing WKT2 and a GDAL-order `GeoTransform`; `time`, `x`, and `y` coordinate arrays. |
+| `v3-cf-grid-mapping.zarr` | Zarr v3 | Native `dimension_names`; an extended CF 1.13 `grid_mapping` reference to a `spatial_ref` scalar containing WKT2 and a numeric-array `GeoTransform`; `time`, `x`, and `y` coordinate arrays. |
 | `v3-geozarr-consolidated.zarr` | Zarr v3, inline consolidated | GeoZarr `proj:code`, `spatial:dimensions`, and affine-order `spatial:transform`; two compatible raster arrays. Child `zarr.json` files are intentionally absent, so array discovery must use the root's inline consolidated metadata and does not require store listing or extra metadata requests. |
 | `v3-geozarr-bbox-pixel.zarr` | Zarr v3 | GeoZarr `proj:wkt2` and `spatial:bbox` with pixel (cell-area) registration and `latitude`/`longitude` spatial dimension names. |
 | `v3-geozarr-bbox-node.zarr` | Zarr v3 | GeoZarr `proj:projjson` and `spatial:bbox` with node (cell-center) registration and `northing`/`easting` spatial dimension names. |

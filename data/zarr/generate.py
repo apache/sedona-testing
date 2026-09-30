@@ -33,6 +33,7 @@ from pyproj import CRS
 HERE = Path(__file__).parent
 FIXTURE_NAMES = (
     "v2-cf-grid-mapping.zarr",
+    "v3-cf-grid-mapping.zarr",
     "v3-geozarr-bbox-node.zarr",
     "v3-geozarr-bbox-pixel.zarr",
     "v3-geozarr-consolidated.zarr",
@@ -129,6 +130,77 @@ def create_v2_cf_grid_mapping(output: Path) -> None:
         },
     )
     zarr.consolidate_metadata(path, zarr_format=2)
+
+
+def create_v3_cf_grid_mapping(output: Path) -> None:
+    """Create an unconsolidated CF grid-mapping hierarchy in Zarr v3."""
+    # CF 1.13 grid mappings and extended grid_mapping syntax:
+    # https://cfconventions.org/Data/cf-conventions/cf-conventions-1.13/cf-conventions.html#grid-mappings-and-projections
+    path = output / "v3-cf-grid-mapping.zarr"
+    root = zarr.create_group(
+        store=path,
+        zarr_format=3,
+        overwrite=True,
+        attributes={
+            "title": "Zarr v3 fixture with CF grid-mapping metadata",
+            "Conventions": "CF-1.13",
+        },
+    )
+
+    root.create_array(
+        "precipitation",
+        data=sample_cube("int16"),
+        chunks=(1, 2, 3),
+        dimension_names=("time", "y", "x"),
+        compressors=[],
+        attributes={
+            "grid_mapping": "spatial_ref: x y",
+            "coordinates": "time y x",
+            "standard_name": "lwe_precipitation_rate",
+            "units": "kg m-2 s-1",
+        },
+    )
+    for name, values, standard_name, units in (
+        (
+            "time",
+            np.array([0, 1], dtype="int32"),
+            "time",
+            "days since 2000-01-01",
+        ),
+        (
+            "y",
+            np.array([199.5, 198.5, 197.5, 196.5]),
+            "projection_y_coordinate",
+            "m",
+        ),
+        (
+            "x",
+            np.array([100.5, 101.5, 102.5, 103.5, 104.5, 105.5]),
+            "projection_x_coordinate",
+            "m",
+        ),
+    ):
+        root.create_array(
+            name,
+            data=values,
+            chunks=values.shape,
+            dimension_names=(name,),
+            compressors=[],
+            attributes={"standard_name": standard_name, "units": units},
+        )
+
+    crs = CRS.from_epsg(3857)
+    root.create_array(
+        "spatial_ref",
+        data=np.array(0, dtype="int32"),
+        compressors=[],
+        dimension_names=(),
+        attributes={
+            **crs.to_cf(),
+            "spatial_ref": crs.to_wkt(version="WKT2_2019"),
+            "GeoTransform": [100.0, 1.0, 0.0, 200.0, 0.0, -1.0],
+        },
+    )
 
 
 def create_v3_geozarr_consolidated(output: Path) -> None:
@@ -271,6 +343,7 @@ def generate(output: Path) -> None:
         if path.exists():
             shutil.rmtree(path)
     create_v2_cf_grid_mapping(output)
+    create_v3_cf_grid_mapping(output)
     create_v3_geozarr_consolidated(output)
     create_v3_geozarr_bbox_pixel(output)
     create_v3_geozarr_bbox_node(output)
@@ -284,6 +357,15 @@ def generate(output: Path) -> None:
             "geotransform": [100.0, 1.0, 0.0, 200.0, 0.0, -1.0],
             "metadata": "CF grid mapping in a scalar spatial_ref array",
             "consolidated_metadata": ".zmetadata",
+        },
+        "v3-cf-grid-mapping.zarr": {
+            "zarr_format": 3,
+            "raster_arrays": ["precipitation"],
+            "chunk_grid_shape": [2, 2, 2],
+            "crs_authority": "EPSG:3857",
+            "geotransform": [100.0, 1.0, 0.0, 200.0, 0.0, -1.0],
+            "metadata": "CF grid mapping in a scalar spatial_ref array",
+            "consolidated_metadata": None,
         },
         "v3-geozarr-consolidated.zarr": {
             "zarr_format": 3,

@@ -1,0 +1,8 @@
+{
+  "attributes": {
+    "title": "Zarr v3 fixture with CF grid-mapping metadata",
+    "Conventions": "CF-1.13"
+  },
+  "zarr_format": 3,
+  "node_type": "group"
+}

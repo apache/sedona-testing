@@ -21,6 +21,28 @@
     ],
     "zarr_format": 2
   },
+  "v3-cf-grid-mapping.zarr": {
+    "chunk_grid_shape": [
+      2,
+      2,
+      2
+    ],
+    "consolidated_metadata": null,
+    "crs_authority": "EPSG:3857",
+    "geotransform": [
+      100.0,
+      1.0,
+      0.0,
+      200.0,
+      0.0,
+      -1.0
+    ],
+    "metadata": "CF grid mapping in a scalar spatial_ref array",
+    "raster_arrays": [
+      "precipitation"
+    ],
+    "zarr_format": 3
+  },
   "v3-geozarr-bbox-node.zarr": {
     "chunk_grid_shape": [
       2,
